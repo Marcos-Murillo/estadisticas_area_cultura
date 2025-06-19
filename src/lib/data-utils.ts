@@ -329,7 +329,7 @@ export async function generateIndividualExcel({
     worksheet.columns.forEach((column) => {
       if (!column) return
       let maxLength = 0
-      column.eachCell({ includeEmpty: true }, (cell) => {
+      column.eachCell?.({ includeEmpty: true }, (cell) => {
         if (!cell) return
         const cellValue = cell.value
         const columnLength = cellValue ? cellValue.toString().length : 10
@@ -490,25 +490,7 @@ export async function generateExcel({
   applyHeaderStyles(facultySheet)
 
   // Ajustar ancho de columnas
-  const adjustColumnWidthsFaculty = (worksheet: ExcelJS.Worksheet) => {
-    if (!worksheet.columns) return
-
-    worksheet.columns.forEach((column) => {
-      if (!column) return
-
-      let maxLength = 0
-      column.eachCell?.({ includeEmpty: true }, (cell) => {
-        if (!cell) return
-        const cellValue = cell.value
-        const columnLength = cellValue ? cellValue.toString().length : 10
-        if (columnLength > maxLength) {
-          maxLength = columnLength
-        }
-      })
-      column.width = Math.min(maxLength + 2, 50) // Limitar a 50 para evitar columnas demasiado anchas
-    })
-  }
-  adjustColumnWidthsFaculty(facultySheet)
+  adjustColumnWidths(facultySheet)
 
   // Crear hoja para estadísticas por programa
   const programSheet = workbook.addWorksheet("Estadísticas por Programa")
@@ -588,25 +570,7 @@ export async function generateExcel({
   applyHeaderStyles(programSheet)
 
   // Ajustar ancho de columnas
-  const adjustColumnWidthsProgram = (worksheet: ExcelJS.Worksheet) => {
-    if (!worksheet.columns) return
-
-    worksheet.columns.forEach((column) => {
-      if (!column) return
-
-      let maxLength = 0
-      column.eachCell?.({ includeEmpty: true }, (cell) => {
-        if (!cell) return
-        const cellValue = cell.value
-        const columnLength = cellValue ? cellValue.toString().length : 10
-        if (columnLength > maxLength) {
-          maxLength = columnLength
-        }
-      })
-      column.width = Math.min(maxLength + 2, 50) // Limitar a 50 para evitar columnas demasiado anchas
-    })
-  }
-  adjustColumnWidthsProgram(programSheet)
+  adjustColumnWidths(programSheet)
 
   // Crear hoja para estadísticas por grupo cultural (si es del tipo 'cultural')
   if (dataType === "cultural" && Object.keys(statsByGrupoCultural).length > 0) {
@@ -687,25 +651,7 @@ export async function generateExcel({
     applyHeaderStyles(culturalSheet)
 
     // Ajustar ancho de columnas
-    const adjustColumnWidthsCultural = (worksheet: ExcelJS.Worksheet) => {
-      if (!worksheet.columns) return
-
-      worksheet.columns.forEach((column) => {
-        if (!column) return
-
-        let maxLength = 0
-        column.eachCell?.({ includeEmpty: true }, (cell) => {
-          if (!cell) return
-          const cellValue = cell.value
-          const columnLength = cellValue ? cellValue.toString().length : 10
-          if (columnLength > maxLength) {
-            maxLength = columnLength
-          }
-        })
-        column.width = Math.min(maxLength + 2, 50) // Limitar a 50 para evitar columnas demasiado anchas
-      })
-    }
-    adjustColumnWidthsCultural(culturalSheet)
+    adjustColumnWidths(culturalSheet)
   }
 
   // Generar archivo Excel y descargarlo
